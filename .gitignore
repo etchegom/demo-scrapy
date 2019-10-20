@@ -1,0 +1,6 @@
+.mypy_cache
+.tox
+.venv
+.pyc
+__pycache__
+local_*.py

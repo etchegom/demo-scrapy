@@ -1,0 +1,48 @@
+version: 2.1
+
+jobs:
+  check:
+    docker:
+      - image: circleci/python:3.7.3-stretch
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "tox.ini" }}
+
+      - run:
+          name: Install tox
+          command: |
+            python3 -m venv venv	
+            source venv/bin/activate
+            pip install tox
+
+      - run:
+          name: Run linters
+          command: |
+            . venv/bin/activate
+            tox -e flake8,mypy
+
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            tox -e py37
+
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "tox.ini" }}
+          paths:
+            - ".tox"
+
+      - store_artifacts:
+          path: test-reports/
+          destination: tr1
+
+      - store_test_results:
+          path: test-reports/
+
+workflows:
+  check-code:
+    jobs:
+      - check

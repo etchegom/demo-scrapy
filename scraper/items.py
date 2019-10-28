@@ -2,5 +2,6 @@ from scrapy import Field, Item
 
 
 class ScraperItem(Item):
-    url = Field()
     title = Field()
+    url = Field()
+    url_hash = Field()

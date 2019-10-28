@@ -1,74 +1,41 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 BOT_NAME = "demo-scraper"
+ROBOTSTXT_OBEY = True
 
 SPIDER_MODULES = ["scraper.spiders"]
 NEWSPIDER_MODULE = "scraper.spiders"
 
-ROBOTSTXT_OBEY = True
-
 CONCURRENT_REQUESTS = 4
 
-# Configure a delay for requests for the same website (default: 0)
-# See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
-# CONCURRENT_REQUESTS_PER_IP = 16
+HASH_FIELDS = ("url",)
+REQUIRED_FIELDS = ("url", "title")
 
-# Disable cookies (enabled by default)
-# COOKIES_ENABLED = False
+# PostgreSQL
+PG_SETTINGS = {
+    "user": os.getenv("POSTGRES_USER", "scraper"),
+    "passwd": os.getenv("POSTGRES_PASSWORD", "password"),
+    "host": os.getenv("POSTGRES_HOST", "localhost"),
+    "port": os.getenv("POSTGRES_PORT", "5432"),
+    "db_name": os.getenv("POSTGRES_DB", "scraper"),
+}
 
-# Disable Telnet Console (enabled by default)
-# TELNETCONSOLE_ENABLED = False
+# Logging
+LOG_ENABLED = True
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
-# Override the default request headers:
-# DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-# }
+ITEM_PIPELINES = {
+    "scraper.pipelines.CheckerPipeline": 300,
+    "scraper.pipelines.HasherPipeline": 400,
+    "scraper.pipelines.PGPipeline": 500,
+    "scraper.pipelines.PrinterPipeline": 600,
+}
 
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#    'scraper.middlewares.ScraperSpiderMiddleware': 543,
-# }
+# Middlewares
+DOWNLOADER_MIDDLEWARES = {"scraper.middlewares.PGCheckExistMiddleware": 500}
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'scraper.middlewares.ScraperDownloaderMiddleware': 543,
-# }
-
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-# EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-# }
-
-ITEM_PIPELINES = {"scraper.pipelines.PrinterPipeline": 300}
-
-# Enable and configure the AutoThrottle extension (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-# AUTOTHROTTLE_ENABLED = True
-# The initial download delay
-# AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
-# AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to
-# each remote server
-# AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
-# AUTOTHROTTLE_DEBUG = False
-
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-# HTTPCACHE_ENABLED = True
-# HTTPCACHE_EXPIRATION_SECS = 0
-# HTTPCACHE_DIR = 'httpcache'
-# HTTPCACHE_IGNORE_HTTP_CODES = []
-# HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 try:
     from .local_settings import *  # noqa

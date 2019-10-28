@@ -25,7 +25,9 @@ PG_SETTINGS = {
 # Logging
 LOG_ENABLED = True
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_FORMATTER = "scraper.loggers.CustomLogFormatter"
 
+# Pipelines
 ITEM_PIPELINES = {
     "scraper.pipelines.CheckerPipeline": 300,
     "scraper.pipelines.HasherPipeline": 400,

@@ -1,7 +1,8 @@
-from scraper.models import BoxItemModel, create_table
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+
+from scraper.models import ScraperItemModel, create_table
 
 
 def session_factory(pg_settings: dict) -> sessionmaker:
@@ -14,9 +15,13 @@ def session_factory(pg_settings: dict) -> sessionmaker:
 
 
 def item_exists(session: Session, url_hash: str) -> bool:
-    q = session.query(BoxItemModel).filter(BoxItemModel.url_hash == url_hash)
+    q = session.query(ScraperItemModel).filter(ScraperItemModel.url_hash == url_hash)
     return session.query(q.exists()).scalar()
 
 
-def get_item(session: Session, url_hash: str) -> BoxItemModel:
-    return session.query(BoxItemModel).filter(BoxItemModel.url_hash == url_hash).first()
+def get_item(session: Session, url_hash: str) -> ScraperItemModel:
+    return (
+        session.query(ScraperItemModel)
+        .filter(ScraperItemModel.url_hash == url_hash)
+        .first()
+    )

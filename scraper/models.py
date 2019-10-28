@@ -2,9 +2,8 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text, event
+from sqlalchemy import Column, DateTime, Integer, String, event
 from sqlalchemy.ext.declarative import declarative_base
-
 from sqlalchemy_utils import URLType
 
 

@@ -52,6 +52,8 @@ class HasherPipeline(object):
 
     def process_item(self, item: ScraperItem, spider: Spider) -> ScraperItem:
         for field in self.hash_fields:
+            if field not in item:
+                continue
             item["{}_hash".format(field)] = utils.hash_value(item[field])
         return item
 

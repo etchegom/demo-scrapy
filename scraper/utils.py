@@ -1,9 +1,9 @@
 import hashlib
 
-from w3lib.html import get_base_url
-
 import extruct
 import requests
+
+from w3lib.html import get_base_url
 
 
 def hash_value(value: str) -> str:

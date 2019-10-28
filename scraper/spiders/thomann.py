@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from typing import Generator, Optional
+from typing import Generator
 
 from scrapy import Selector, Spider
 from scrapy.http import Request, Response
@@ -22,7 +22,7 @@ class ThomannSpider(Spider):
             # FIXME: to remove after dev
             break
 
-    def product_page_cb(self, response: Response) -> Optional[ScraperItem]:
+    def product_page_cb(self, response: Response) -> ScraperItem:
         sel = Selector(response, type="html")
 
         # metadata can help extracting more reliable data (json-ld, microdata, ...)
@@ -32,4 +32,4 @@ class ThomannSpider(Spider):
         item = ScraperItem()
         item["url"] = response.url
         item["title"] = sel.xpath("//h1/text()").get()
-        yield item
+        return item

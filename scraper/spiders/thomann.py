@@ -19,9 +19,6 @@ class ThomannSpider(Spider):
         for url in sel.xpath('//div[@id="defaultResultPage"]//a/@href').getall():
             yield Request(url=url, callback=self.product_page_cb)
 
-            # FIXME: to remove after dev
-            break
-
     def product_page_cb(self, response: Response) -> ScraperItem:
         sel = Selector(response, type="html")
 

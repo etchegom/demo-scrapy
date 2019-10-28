@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -25,3 +27,15 @@ def get_item(session: Session, url_hash: str) -> ScraperItemModel:
         .filter(ScraperItemModel.url_hash == url_hash)
         .first()
     )
+
+
+def delete_items(session: Session, url_hashes: List[str]) -> List[str]:
+    deleted_items = []
+    for obj in (
+        session.query(ScraperItemModel)
+        .filter(ScraperItemModel.url_hash.in_(url_hashes))
+        .all()
+    ):
+        deleted_items.append(obj.url_hash)
+        session.delete(obj)
+    return deleted_items

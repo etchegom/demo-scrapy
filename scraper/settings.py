@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from typing import List
 
 BOT_NAME = "demo-scraper"
 ROBOTSTXT_OBEY = True
@@ -39,7 +40,8 @@ ITEM_PIPELINES = {
 DOWNLOADER_MIDDLEWARES = {
     "scrapy.downloadermiddleware.useragent.UserAgentMiddleware": None,
     "scraper.middlewares.RandomUserAgentMiddleware": 400,
-    "scraper.middlewares.PGCheckExistMiddleware": 500,
+    "scraper.middlewares.BlacklistMiddleware": 500,
+    "scraper.middlewares.PGCheckExistMiddleware": 00,
 }
 
 USER_AGENT_LIST = [
@@ -50,6 +52,8 @@ USER_AGENT_LIST = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko)",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
 ]
+
+BLACKLIST = []  # type: List[str]
 
 try:
     from .local_settings import *  # noqa

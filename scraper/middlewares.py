@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from typing import Optional, Tuple
+import random
+from typing import List, Optional, Tuple
 
 from scrapy import Spider, signals
 from scrapy.exceptions import IgnoreRequest
@@ -48,3 +49,17 @@ class PGCheckExistMiddleware(object):
             session.close()
 
         return None
+
+
+class RandomUserAgentMiddleware(object):
+    def __init__(self, user_agent_list: List[str]):
+        self.user_agent_list = user_agent_list
+
+    @classmethod
+    def from_crawler(cls, crawler):  # type: ignore
+        return cls(user_agent_list=crawler.settings.get("USER_AGENT_LIST"))
+
+    def process_request(self, request: Request, spider: Spider) -> None:
+        user_agent = random.choice(self.user_agent_list)
+        if user_agent:
+            request.headers["User-Agent"] = user_agent

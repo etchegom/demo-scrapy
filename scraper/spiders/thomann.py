@@ -5,6 +5,7 @@ from typing import Generator, Optional
 from scrapy import Selector, Spider
 from scrapy.http import Request, Response
 
+from scraper import utils
 from scraper.items import ScraperItem
 
 
@@ -23,6 +24,10 @@ class ThomannSpider(Spider):
 
     def product_page_cb(self, response: Response) -> Optional[ScraperItem]:
         sel = Selector(response, type="html")
+
+        # metadata can help extracting more reliable data (json-ld, microdata, ...)
+        meta = utils.extract_metadata(url=response.url)
+        self.logger.info(meta)
 
         item = ScraperItem()
         item["url"] = response.url

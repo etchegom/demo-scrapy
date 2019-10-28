@@ -1,5 +1,10 @@
 import hashlib
 
+from w3lib.html import get_base_url
+
+import extruct
+import requests
+
 
 def hash_value(value: str) -> str:
     """Hash a string value using MD5
@@ -11,3 +16,18 @@ def hash_value(value: str) -> str:
         str -- The hashed string
     """
     return hashlib.md5(value.encode("utf-8")).hexdigest()
+
+
+def extract_metadata(url: str) -> dict:
+    """Extract metadata using extruct 3rdparty tool.
+
+    Arguments:
+        url {str} -- The URL to analyze
+
+    Returns:
+        dict -- Metadata extraction
+    """
+
+    r = requests.get(url)
+    base_url = get_base_url(r.text, r.url)
+    return extruct.extract(r.text, base_url=base_url)
